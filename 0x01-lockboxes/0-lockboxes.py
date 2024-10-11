@@ -20,7 +20,7 @@ def checkUnaccessedBoxes(unaccessedBoxes, unlockedBoxes, lockedBoxes, boxes):
             else:
                 unaccessed.append(index)
                 # print('printUnaccessed', unaccessed)
-        if unaccessed and (len(unaccessed) < len(unaccessedBoxes)):
+        if unaccessed and (unaccessed != unaccessedBoxes):
             # print('Going back for', unaccessed)
             checkUnaccessedBoxes(unaccessed, unlockedBoxes, lockedBoxes, boxes)
         else:
@@ -40,6 +40,8 @@ def canUnlockAll(boxes):
     '''
     lockedBoxes = [i for i in range(len(boxes))][1:]
     unlockedBoxes = [key for key in boxes[0]]
+    # print('locked boxes', lockedBoxes)
+    # print('unlocked boxes', unlockedBoxes)
     unaccessedBoxes = []
 
     for index, box in enumerate(boxes[1:], start=1):
@@ -59,6 +61,7 @@ def canUnlockAll(boxes):
     checkUnaccessedBoxes(unaccessedBoxes, unlockedBoxes, lockedBoxes, boxes)
 
     unlockedBoxes.sort()
-    if unlockedBoxes == lockedBoxes:
+    # print('unlocked boxes', unlockedBoxes)
+    if unlockedBoxes == lockedBoxes or len(lockedBoxes) == 0:
         return (True)
     return (False)
