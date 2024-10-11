@@ -5,37 +5,60 @@
 '''
 
 
+def checkUnaccessedBoxes(unaccessedBoxes, unlockedBoxes, lockedBoxes, boxes):
+    if unaccessedBoxes:
+        unaccessed = []
+        # print("Calling")
+        for index in unaccessedBoxes:
+            # print('index', index)
+            if index in unlockedBoxes:
+                # print('index {} accessed'.format(index))
+                for key in boxes[index]:
+                    if key != 0 and key <= lockedBoxes[-1]:
+                        if (key not in unlockedBoxes):
+                            unlockedBoxes.append(key)
+            else:
+                unaccessed.append(index)
+                # print('printUnaccessed', unaccessed)
+        if unaccessed and (len(unaccessed) < len(unaccessedBoxes)):
+            # print('Going back for', unaccessed)
+            checkUnaccessedBoxes(unaccessed, unlockedBoxes, lockedBoxes, boxes)
+        else:
+            # print('unlocked boxes after recursion', unlockedBoxes)
+            # print('Done with recursion')
+            # print(f'returning {unlockedBoxes} of type {type(unlockedBoxes)}')
+            return unlockedBoxes
+    else:
+        # print('unlocked boxes no recursion', unlockedBoxes)
+        # print('No recursion')
+        return unlockedBoxes
+
+
 def canUnlockAll(boxes):
     '''
     Returns True if all boxes can be opened
     '''
-    # Index of the boxes locked -> first box is always opened
-    locked = [i for i in range(len(boxes))][1:]
-    # List to store unlocked boxes
-    unlocked = []
-    reserve = []
-    
-    for index, box in enumerate(boxes):
+    lockedBoxes = [i for i in range(len(boxes))][1:]
+    unlockedBoxes = [key for key in boxes[0]]
+    unaccessedBoxes = []
+
+    for index, box in enumerate(boxes[1:], start=1):
         for key in box:
-            if index == 0:
-                unlocked.append(key)
+            if index in unlockedBoxes:
+                if key != 0 and key <= lockedBoxes[-1]:
+                    if key not in unlockedBoxes:
+                        unlockedBoxes.append(key)
             else:
-                if index in unlocked:
-                    if (key != 0 and key <= locked[-1]) and (key not in unlocked):
-                        unlocked.append(key)
-                else:
-                    reserve.append(index)
-    reserve = list(set(reserve))
+                unaccessedBoxes.append(index)
+                break
 
-    for index in reserve:
-        if index in unlocked:
-            for key in boxes[index]:
-                if index in unlocked and key != 0 and key <= locked[-1]:
-                    if (key != 0 and key <= locked[-1]) and (key not in unlocked):
-                        unlocked.append(key)
-                
+    # print('locked', lockedBoxes)
+    # print('unlocked', unlockedBoxes)
+    # print('reserve', unaccessedBoxes)
 
-    unlocked.sort()
-    if unlocked == locked:
+    checkUnaccessedBoxes(unaccessedBoxes, unlockedBoxes, lockedBoxes, boxes)
+
+    unlockedBoxes.sort()
+    if unlockedBoxes == lockedBoxes:
         return (True)
     return (False)
