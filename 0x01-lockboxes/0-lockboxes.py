@@ -17,6 +17,7 @@ def checkUnaccessedBoxes(unaccessedBoxes, unlockedBoxes, lockedBoxes, boxes):
                     if key != 0 and key <= lockedBoxes[-1]:
                         if (key not in unlockedBoxes):
                             unlockedBoxes.append(key)
+                            unlockedBoxes.sort()
             else:
                 unaccessed.append(index)
                 # print('printUnaccessed', unaccessed)
@@ -39,20 +40,33 @@ def canUnlockAll(boxes):
     Returns True if all boxes can be opened
     '''
     lockedBoxes = [i for i in range(len(boxes))][1:]
-    unlockedBoxes = [key for key in boxes[0]]
+    unlockedBoxes = []
+    # print('locked boxes', lockedBoxes)
+    # print('unlocked boxes', unlockedBoxes)
+    # print(len(boxes))
+    # exit()
     # print('locked boxes', lockedBoxes)
     # print('unlocked boxes', unlockedBoxes)
     unaccessedBoxes = []
 
-    for index, box in enumerate(boxes[1:], start=1):
+    if lockedBoxes == []:
+        return True
+
+    for index, box in enumerate(boxes):
+        # print("Index {}".format(index))
         for key in box:
-            if index in unlockedBoxes:
+            if index == 0 or index in unlockedBoxes:
                 if key != 0 and key <= lockedBoxes[-1]:
                     if key not in unlockedBoxes:
                         unlockedBoxes.append(key)
+                        unlockedBoxes.sort()
             else:
                 unaccessedBoxes.append(index)
                 break
+        if unlockedBoxes == lockedBoxes:
+            # print('unlocked boxes', unlockedBoxes)
+            # print('no need to go further')
+            return True
 
     # print('locked', lockedBoxes)
     # print('unlocked', unlockedBoxes)
@@ -60,7 +74,7 @@ def canUnlockAll(boxes):
 
     checkUnaccessedBoxes(unaccessedBoxes, unlockedBoxes, lockedBoxes, boxes)
 
-    unlockedBoxes.sort()
+    # print('unlocked boxes', unlockedBoxes)
     # print('unlocked boxes', unlockedBoxes)
     if unlockedBoxes == lockedBoxes or len(lockedBoxes) == 0:
         return (True)
