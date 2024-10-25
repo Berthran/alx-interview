@@ -3,6 +3,30 @@
 Parse log stats
 '''
 import sys
+import signal
+
+
+def handle_sigint(signum, frame):
+    '''
+    Handles CTRL+C
+    '''
+    filesize = frame.f_locals.get('totalfsize')
+    statusCodes = frame.f_locals.get('statusCodes')
+    print10logs(filesize, statusCodes)
+    sys.exit(0)
+
+
+signal.signal(signal.SIGINT, handle_sigint)
+
+
+def print10logs(filesize, statusCodes):
+    '''
+    prints log report after 10 iteration
+    '''
+    print('File size: {}'.format(filesize))
+    sortedscodes = sorted(statusCodes)
+    print("\n".join("{}: {}".format(i, statusCodes[i])
+                    for i in sortedscodes))
 
 
 def main():
@@ -32,10 +56,7 @@ def main():
             pass
 
         if i == 10:
-            print('File size: {}'.format(totalfsize))
-            sortedscodes = sorted(statusCodes)
-            print("\n".join("{}: {}".format(i, statusCodes[i])
-                            for i in sortedscodes))
+            print10logs(totalfsize, statusCodes)
             i = 0
 
     # lines = sys.stdin.read().splitlines()
