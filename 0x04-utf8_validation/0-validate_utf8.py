@@ -45,6 +45,6 @@ def validUTF8(data):
     for codepoint in data:
         if isascii(codepoint):
             continue
-        if codepoint > 255:
+        else:
             return False
     return True
