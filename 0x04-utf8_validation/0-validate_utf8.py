@@ -13,6 +13,17 @@ def isascii(codepoint):
     return False
 
 
+def utf8range(codepoint):
+    '''
+    checks that a codepoint is in utf8range
+    '''
+    # Mask the first 8 bits of codepoint
+    mask = (1 << 8) - 1
+    if codepoint & mask <= 255:
+        return True
+    return False
+
+
 def istwobytes(codepoint):
     pass
 
@@ -32,14 +43,6 @@ def validUTF8(data):
     if data is None:
         return False
     for codepoint in data:
-        if isascii(codepoint):
-            continue
-        elif istwobytes(codepoint):
-            continue
-        elif isthreebytes(codepoint):
-            continue
-        elif isfoutbytes(codepoint):
-            continue
-        else:
+        if codepoint > 255:
             return False
     return True
