@@ -49,10 +49,10 @@ def validUTF8(data):
                     if eightLSB2 >= 128 and eightLSB2 <= 191:
                         i += 3        # Valid Continuation Bytes: VALID
                         continue
-                    return False      # Missing or Invalid Second continuation Byte
-                return False          # Missing of Invalid First continuation Byte
+                    return False  # Missing/Invalid Second continuation Byte
+                return False      # Missing/Invalid First continuation Byte
             except IndexError:
-                return False          # Missing First Continuation Byte
+                return False      # Missing First Continuation Byte
 
         # Check 4-bytes Character
         elif eightLSB >= 240 and eightLSB <= 247:
@@ -69,11 +69,11 @@ def validUTF8(data):
                         if eightLSB3 >= 128 and eightLSB3 <= 191:
                             i += 4      # Valid Continuation Bytes: VALID
                             continue
-                        return False    # Missing or Invalid Third continuation Byte
-                    return False        # Missing or Invalid Second continuation Byte
-                return False            # Missing or Invalid First continuation Byte
+                        return False  # Missing/Invalid Third continuation Byte
+                    return False    # Missing/Invalid Second continuation Byte
+                return False        # Missing/Invalid First continuation Byte
             except IndexError:
-                return False            # Missing First continuation Byte
+                return False        # Missing First continuation Byte
 
         else:
             return False    # Invalid UTF-8 Encoding Pattern
