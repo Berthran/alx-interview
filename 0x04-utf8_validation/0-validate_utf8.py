@@ -21,21 +21,21 @@ def validUTF8(data):
 
         # Check ASCII
         if eightLSB <= 127:
-            # Ascii number: VALID
-            i += 1
+            i += 1     # Ascii grapheme: VALID
             continue
 
         # Check 2-Byte characters
         elif eightLSB >= 192 and eightLSB <= 223:
             # Check continuation Byte
             try:
-                # In case continuation byte is not in the sequence
                 nextContByte = data[i + 1]
                 eightLSB = nextContByte & 255
                 if eightLSB >= 128 and eightLSB <= 191:
-                    i += 2
+                    i += 2     # Valid Continuation Byte: VALID
+                    continue
+                return False     # Missing or Invalid Continuation Byte
             except IndexError:
-                return False
+                return False    # Missing Continuation Byte
 
         # Check 3-Bytes Character
         elif eightLSB >= 224 and eightLSB <= 239:
@@ -47,12 +47,12 @@ def validUTF8(data):
                     nextContByte2 = data[i + 2]
                     eightLSB2 = nextContByte2 & 255
                     if eightLSB2 >= 128 and eightLSB2 <= 191:
-                        i += 3
+                        i += 3        # Valid Continuation Bytes: VALID
                         continue
-                    return False
-                return False
+                    return False      # Missing or Invalid Second continuation Byte
+                return False          # Missing of Invalid First continuation Byte
             except IndexError:
-                return False
+                return False          # Missing First Continuation Byte
 
         # Check 4-bytes Character
         elif eightLSB >= 240 and eightLSB <= 247:
@@ -67,13 +67,13 @@ def validUTF8(data):
                         nextContByte3 = data[i + 3]
                         eightLSB3 = nextContByte3 & 255
                         if eightLSB3 >= 128 and eightLSB3 <= 191:
-                            i += 4
+                            i += 4      # Valid Continuation Bytes: VALID
                             continue
-                        return False
-                    return False
-                return False
+                        return False    # Missing or Invalid Third continuation Byte
+                    return False        # Missing or Invalid Second continuation Byte
+                return False            # Missing or Invalid First continuation Byte
             except IndexError:
-                return False
+                return False            # Missing First continuation Byte
         else:
-            return False
-    return True
+            return False                # Invalid UTF-8 Encoding Pattern
+    return True                         # Valid UTF-8 Encoding Pattern
